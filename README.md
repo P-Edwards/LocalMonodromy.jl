@@ -3,7 +3,7 @@ LocalMonodromy.jl
 
 Version
 -------
-1.0.0
+1.0.1
 
 
 Copyright (C) 2024 [Parker

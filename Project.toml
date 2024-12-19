@@ -1,7 +1,7 @@
 name = "LocalMonodromy"
 uuid = "6b59d98f-22c6-4686-a482-9c6360ebd38d"
 authors = ["Parker Edwards <parkeredw.com>"]
-version = "1.0.0"
+version = "1.0.1"
 
 [deps]
 Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"

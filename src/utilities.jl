@@ -61,7 +61,13 @@ function rank_of_expression_matrix(mat;expect_deficiency=false)
 end
 
 
-function deflate(system,points,initial_parameters)
+function deflate(system,points,initial_parameters;current_tries=0,max_tries=3)
+	# Stopping criterion if deflation doesn't seem 
+	# to be working
+	if current_tries == max_tries
+		return system,points
+	end
+
 	# Basic values	
 	params = system.parameters
 	vars = system.variables
@@ -109,6 +115,6 @@ function deflate(system,points,initial_parameters)
 		number_new_functions = length(new_parameterized_system.expressions)
 		random_down_matrix = rand(ComplexF64,length(variables(new_parameterized_system)),number_new_functions)
 		squared_up_parameterized = System(random_down_matrix*new_parameterized_system.expressions,variables=variables(new_parameterized_system),parameters=params)
-		return deflate(squared_up_parameterized,new_points,initial_parameters)
+		return deflate(squared_up_parameterized,new_points,initial_parameters;current_tries=current_tries+1,max_tries=max_tries)
 	end
 end
