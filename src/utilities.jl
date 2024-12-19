@@ -43,12 +43,21 @@ function follow_system_along_path(input_system,path_to_follow,points_to_follow)
 	return current_points
 end
 
-function rank_of_expression_matrix(mat)
+function rank_of_expression_matrix(mat;expect_deficiency=false)
 	# Coercing ModelKit to output an actual numerical 
-	# matrix that LienarAlgebra will accept takes a 
+	# matrix that LinearAlgebra will accept takes a 
 	# bit of a cludge. Otherwise, the entries can
 	# be of type ModelKit.Expression.
-	return rank(Complex.(to_number.(expand.(mat))))
+	calculated_rank = rank(Complex.(to_number.(expand.(mat))))
+	# The  numerical rank computation here occasionally disagrees with
+	# the rank computed during tracking. At the risk of degrading 
+	# the generality of this function, the following handles
+	# a common case directly. 
+	if expect_deficiency && calculated_rank == minimum(size(mat))
+		return minimum(size(mat))-1
+	else
+		return calculated_rank
+	end
 end
 
 
@@ -60,7 +69,10 @@ function deflate(system,points,initial_parameters)
 	number_of_functions = length(system.expressions)
 	system_at_initial = subs(system.expressions,params=>initial_parameters)
 	jacobian_at_initial = differentiate(system_at_initial,vars)
-	rank_at_points = rank_of_expression_matrix(subs(jacobian_at_initial,vars=>points[1]))
+	rank_at_points = rank_of_expression_matrix(subs(jacobian_at_initial,vars=>points[1]),expect_deficiency=true)
+	if rank_at_points == number_of_functions
+		rank_at_points = number_of_functions-1
+	end
 	dimnull = number_of_variables - rank_at_points
 
 	# Set up deflation system
@@ -71,8 +83,6 @@ function deflate(system,points,initial_parameters)
 	new_parameterized_system = System(vcat(system.expressions...,differentiate(system.expressions,vars)*random_vectors*vcat(identity_matrix,lambdas)...),variables=inflated_variables,parameters=params)
 
 	# Compute new start solutions for this system.
-	# In principle we should just solve this with some
-	# linear algebra, but we'll let HC.jl handle it
 	new_system_at_initial_expressions = subs(new_parameterized_system.expressions,params=>initial_parameters)
 	new_points = []
 	enough_rank = false
