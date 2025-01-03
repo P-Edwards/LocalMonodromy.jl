@@ -19,7 +19,7 @@ To install as a standalone local package: Clone this repository to a directory. 
 
 Basic usage
 ------
-To use multiple cores, run `export JULIA_NUM_THREADS=<number_to_use>` before starting Julia. Examples are available at [https://github.com/P-Edwards/local-monodromy-examples](https://github.com/P-Edwards/local-monodromy-examples).
+To use multiple cores, run `export JULIA_NUM_THREADS=<number_to_use>` before starting Julia. Examples are available at [https://doi.org/10.5281/zenodo.14532555](https://doi.org/10.5281/zenodo.14532555).
 
 
 This package primarily exposes the following function: 
