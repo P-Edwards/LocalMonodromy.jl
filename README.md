@@ -68,6 +68,11 @@ Each `LocalWitnessSet` has the following fields:
 * `point` the point at which the input was localized
 
 
+Paper 
+-----
+This package implements the algorithm detailed in "On computing local monodromy and the numerical local irreducible decomposition" by Parker B. Edwards and Jonathan D. Haunstein available at [https://doi.org/10.48550/arXiv.2412.17952](https://doi.org/10.48550/arXiv.2412.17952). 
+
+
 
 License
 -------
